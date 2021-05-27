@@ -15,7 +15,11 @@ class MainActivity : AppCompatActivity(), MainView {
         setContentView(vb?.root)
 
         val listener = View.OnClickListener {
-            presenter.counterClick(it.id)
+            when (it.id) {
+                R.id.btn_counter1 -> presenter.counterClick(0)
+                R.id.btn_counter2 -> presenter.counterClick(1)
+                R.id.btn_counter3 -> presenter.counterClick(2)
+            }
         }
 
         vb?.btnCounter1?.setOnClickListener(listener)
@@ -23,7 +27,6 @@ class MainActivity : AppCompatActivity(), MainView {
         vb?.btnCounter3?.setOnClickListener(listener)
     }
 
-    //Подсказка к ПЗ: поделить на 3 отдельные функции и избавиться от index
     override fun setButtonText(index: Int, text: String) {
         when (index) {
             0 -> vb?.btnCounter1?.text = text
