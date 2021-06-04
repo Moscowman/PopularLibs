@@ -2,20 +2,35 @@ package ru.varasoft.popularlibs
 
 import moxy.MvpPresenter
 
-class MainPresenter(val model: CountersModel) : MvpPresenter<MainView>() {
+class MainPresenter(val usersRepo: GithubUsersRepo) : MvpPresenter<MainView>() {
 
-    fun counterOneClick() {
-        val nextValue = model.next(0)
-        viewState.setButtonOneText(nextValue.toString())
+    class UsersListPresenter : IUserListPresenter {
+        val users = mutableListOf<GithubUser>()
+        override var itemClickListener: ((UserItemView) -> Unit)? = null
+
+        override fun getCount() = users.size
+
+        override fun bindView(view: UserItemView) {
+            val user = users[view.pos]
+            view.setLogin(user.login)
+        }
     }
 
-    fun counterTwoClick() {
-        val nextValue = model.next(1)
-        viewState.setButtonTwoText(nextValue.toString())
+    val usersListPresenter = UsersListPresenter()
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.init()
+        loadData()
+
+        usersListPresenter.itemClickListener = { itemView ->
+            //TODO: переход на экран пользователя
+        }
     }
 
-    fun counterThreeClick() {
-        val nextValue = model.next(2)
-        viewState.setButtonThreeText(nextValue.toString())
+    fun loadData() {
+        val users = usersRepo.getUsers()
+        usersListPresenter.users.addAll(users)
+        viewState.updateList()
     }
 }
