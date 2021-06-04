@@ -1,16 +1,16 @@
 package ru.varasoft.popularlibs
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.databinding.ActivityMainBinding
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 
-    private val presenter by moxyPresenter { MainPresenter(GithubUsersRepo()) }
-    private var adapter: UsersRVAdapter? = null
+    val navigator = AppNavigator(this, R.id.container)
 
+    private val presenter by moxyPresenter { MainPresenter(App.instance.router, AndroidScreens()) }
     private var vb: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,13 +19,22 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         setContentView(vb?.root)
     }
 
-    override fun init() {
-        vb?.rvUsers?.layoutManager = LinearLayoutManager(this)
-        adapter = UsersRVAdapter(presenter.usersListPresenter)
-        vb?.rvUsers?.adapter = adapter
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        App.instance.navigatorHolder.setNavigator(navigator)
     }
 
-    override fun updateList() {
-        adapter?.notifyDataSetChanged()
+    override fun onPause() {
+        super.onPause()
+        App.instance.navigatorHolder.removeNavigator()
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach {
+            if(it is BackButtonListener && it.backPressed()){
+                return
+            }
+        }
+        presenter.backClicked()
     }
 }

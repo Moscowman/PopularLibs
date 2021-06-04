@@ -1,36 +1,16 @@
 package ru.varasoft.popularlibs
 
+import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
-class MainPresenter(val usersRepo: GithubUsersRepo) : MvpPresenter<MainView>() {
-
-    class UsersListPresenter : IUserListPresenter {
-        val users = mutableListOf<GithubUser>()
-        override var itemClickListener: ((UserItemView) -> Unit)? = null
-
-        override fun getCount() = users.size
-
-        override fun bindView(view: UserItemView) {
-            val user = users[view.pos]
-            view.setLogin(user.login)
-        }
-    }
-
-    val usersListPresenter = UsersListPresenter()
+class MainPresenter(val router: Router, val screens: IScreens) : MvpPresenter<MainView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.init()
-        loadData()
-
-        usersListPresenter.itemClickListener = { itemView ->
-            //TODO: переход на экран пользователя
-        }
+        router.replaceScreen(screens.users())
     }
 
-    fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+    fun backClicked() {
+        router.exit()
     }
 }
