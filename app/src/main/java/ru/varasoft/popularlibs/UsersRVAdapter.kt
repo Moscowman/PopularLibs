@@ -22,5 +22,9 @@ class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<U
         override fun setLogin(text: String) = with(vb) {
             tvLogin.text = text
         }
+
+        override fun getLogin(): String = with(vb) {
+            return tvLogin.text.toString()
+        }
     }
 }

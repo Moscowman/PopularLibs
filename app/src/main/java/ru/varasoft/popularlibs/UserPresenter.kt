@@ -7,6 +7,7 @@ class UserPresenter(val user: GithubUser, val router: Router) : MvpPresenter<Use
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
+        viewState.setLogin(user.login)
     }
 
     fun backPressed(): Boolean {

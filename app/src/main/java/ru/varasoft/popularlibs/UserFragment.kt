@@ -10,21 +10,19 @@ import ru.varasoft.popularlibs.databinding.FragmentUserBinding
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     companion object {
-
-        private const val ARG_USER_ID = "userId"
-
-        fun newInstance(userId: String): Fragment = UserFragment()
-            .arguments(ARG_USER_ID to userId)
+        fun newInstance(user: GithubUser): Fragment {
+            val fragment = UserFragment()
+            fragment.user = user
+            return fragment
+        }
     }
 
-    private val userId: String by lazy {
-        arguments?.getString(ARG_USER_ID) ?: ""
-    }
-
+    lateinit var user: GithubUser
+        set
 
     val presenter: UserPresenter by moxyPresenter {
         UserPresenter(
-            GithubUser(""),
+            user,
             App.instance.router
         )
     }
@@ -46,6 +44,10 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     }
 
     override fun init() {
+    }
+
+    override fun setLogin(login: String) {
+        vb?.userLogin?.text = login
     }
 
     override fun backPressed() = presenter.backPressed()
