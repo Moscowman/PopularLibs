@@ -8,7 +8,7 @@ class MockedUserRepository(private val users: List<GithubUser>) : UserRepository
     override fun fetchUsers(): Single<List<GithubUser>> =
         Single.just(users)
 
-    override fun fetchUserById(userId: String): GithubUser? =
-        users.firstOrNull { user -> user.login == userId }
+    override fun fetchUserById(userId: String): Single<GithubUser> =
+        Single.just(users.firstOrNull { user -> user.login == userId })
 
 }

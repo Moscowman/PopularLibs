@@ -16,6 +16,6 @@ interface UserRepository {
      * @param userId идентифиактор пользователя
      * @return пользователь
      */
-    fun fetchUserById(userId: String): GithubUser?
+    fun fetchUserById(userId: String): Single<GithubUser>
 
 }
