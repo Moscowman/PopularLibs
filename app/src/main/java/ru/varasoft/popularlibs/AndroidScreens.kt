@@ -1,6 +1,8 @@
 package ru.varasoft.popularlibs
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import ru.varasoft.popularlibs.presentation.User.UserFragment
+import ru.varasoft.popularlibs.presentation.Users.UsersFragment
 
 class AndroidScreens : IScreens {
     override fun users() = FragmentScreen { UsersFragment.newInstance() }

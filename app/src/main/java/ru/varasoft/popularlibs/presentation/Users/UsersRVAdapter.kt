@@ -1,9 +1,11 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.presentation.Users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.varasoft.popularlibs.IUserListPresenter
 import ru.varasoft.popularlibs.databinding.ItemUserBinding
+import ru.varasoft.popularlibs.presentation.User.UserItemView
 
 class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
@@ -16,7 +18,8 @@ class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<U
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = presenter.bindView(holder.apply { pos = position })
 
-    inner class ViewHolder(val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root), UserItemView {
+    inner class ViewHolder(val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root),
+        UserItemView {
         override var pos = -1
 
         override fun setLogin(text: String) = with(vb) {

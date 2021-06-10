@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.presentation.User
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.varasoft.popularlibs.App
+import ru.varasoft.popularlibs.BackButtonListener
+import ru.varasoft.popularlibs.arguments
+import ru.varasoft.popularlibs.data.user.UserRepositoryFactory
 import ru.varasoft.popularlibs.databinding.FragmentUserBinding
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {

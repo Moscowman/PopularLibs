@@ -1,7 +1,12 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.presentation.Users
 
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import ru.varasoft.popularlibs.IScreens
+import ru.varasoft.popularlibs.IUserListPresenter
+import ru.varasoft.popularlibs.data.user.UserRepository
+import ru.varasoft.popularlibs.data.user.model.GithubUser
+import ru.varasoft.popularlibs.presentation.User.UserItemView
 
 class UsersPresenter(val usersRepo: UserRepository, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {

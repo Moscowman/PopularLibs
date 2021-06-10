@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.presentation.Users
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy

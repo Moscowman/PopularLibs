@@ -1,7 +1,8 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.presentation.User
 
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import ru.varasoft.popularlibs.data.user.UserRepository
 
 class UserPresenter(
     private val userId: String,

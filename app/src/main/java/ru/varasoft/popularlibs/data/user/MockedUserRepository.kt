@@ -1,4 +1,6 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.data.user
+
+import ru.varasoft.popularlibs.data.user.model.GithubUser
 
 class MockedUserRepository(private val users: List<GithubUser>) : UserRepository {
 

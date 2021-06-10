@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs
+package ru.varasoft.popularlibs.data.user
 
 object UserRepositoryFactory {
 
