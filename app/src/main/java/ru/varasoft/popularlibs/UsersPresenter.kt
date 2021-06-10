@@ -3,7 +3,7 @@ package ru.varasoft.popularlibs
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val screens: IScreens) :
+class UsersPresenter(val usersRepo: UserRepository, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -26,9 +26,9 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
 
         usersListPresenter.itemClickListener = { itemView ->
             val login = itemView.getLogin()
-            for (item in usersRepo.getUsers()) {
+            for (item in usersRepo.fetchUsers()) {
                 if (item.login == login) {
-                    router.navigateTo(screens.user(item))
+                    router.navigateTo(screens.user(item.login))
                     break
                 }
             }
@@ -36,7 +36,7 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
     }
 
     fun loadData() {
-        val users = usersRepo.getUsers()
+        val users = usersRepo.fetchUsers()
         usersListPresenter.users.addAll(users)
         viewState.updateList()
     }

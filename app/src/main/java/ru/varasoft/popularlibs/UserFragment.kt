@@ -10,20 +10,22 @@ import ru.varasoft.popularlibs.databinding.FragmentUserBinding
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     companion object {
-        fun newInstance(user: GithubUser): Fragment {
-            val fragment = UserFragment()
-            fragment.user = user
-            return fragment
-        }
+
+        private const val ARG_USER_ID = "userId"
+
+        fun newInstance(userId: String): Fragment =
+            UserFragment()
+                .arguments(ARG_USER_ID to userId)
     }
 
-    lateinit var user: GithubUser
-        set
-
+    private val userId: String by lazy {
+        arguments?.getString(ARG_USER_ID) ?: ""
+    }
     val presenter: UserPresenter by moxyPresenter {
         UserPresenter(
-            user,
-            App.instance.router
+            userId,
+            App.instance.router,
+            userRepository = UserRepositoryFactory.create()
         )
     }
 
@@ -41,9 +43,6 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     override fun onDestroyView() {
         super.onDestroyView()
         vb = null
-    }
-
-    override fun init() {
     }
 
     override fun setLogin(login: String) {
