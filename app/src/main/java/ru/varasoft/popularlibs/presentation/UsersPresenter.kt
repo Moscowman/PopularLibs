@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs.presentation.Users
+package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
@@ -6,7 +6,6 @@ import ru.varasoft.popularlibs.IScreens
 import ru.varasoft.popularlibs.IUserListPresenter
 import ru.varasoft.popularlibs.data.user.UserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
-import ru.varasoft.popularlibs.presentation.User.UserItemView
 
 class UsersPresenter(val usersRepo: UserRepository, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {
@@ -31,24 +30,36 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
 
         usersListPresenter.itemClickListener = { itemView ->
             val login = itemView.getLogin()
-            for (item in usersRepo.fetchUsers()) {
-                if (item.login == login) {
-                    router.navigateTo(screens.user(item.login))
-                    break
+            var users: List<GithubUser>? = null
+            val disposable = usersRepo.fetchUsers()
+                .subscribe({ s ->
+                    users = s
+                })
+            disposable.dispose()
+            if (users != null) {
+                for (item in users!!) {
+                    if (item.login == login) {
+                        router.navigateTo(screens.user(item.login))
+                        break
+                    }
                 }
             }
         }
     }
 
     fun loadData() {
-        val users = usersRepo.fetchUsers()
-        usersListPresenter.users.addAll(users)
+        var users: List<GithubUser>? = null
+        val disposable = usersRepo.fetchUsers()
+            .subscribe({ s ->
+                users = s
+            })
+        users?.let { usersListPresenter.users.addAll(it) }
         viewState.updateList()
+        disposable.dispose()
     }
 
     fun backPressed(): Boolean {
         router.exit()
         return true
     }
-
 }

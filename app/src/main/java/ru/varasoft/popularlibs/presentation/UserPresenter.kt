@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs.presentation.User
+package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter

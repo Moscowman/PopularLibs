@@ -1,11 +1,10 @@
-package ru.varasoft.popularlibs.presentation.Users
+package ru.varasoft.popularlibs.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.varasoft.popularlibs.IUserListPresenter
 import ru.varasoft.popularlibs.databinding.ItemUserBinding
-import ru.varasoft.popularlibs.presentation.User.UserItemView
 
 class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 

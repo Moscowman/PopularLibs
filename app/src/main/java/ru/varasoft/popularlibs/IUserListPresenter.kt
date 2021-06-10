@@ -1,5 +1,5 @@
 package ru.varasoft.popularlibs
 
-import ru.varasoft.popularlibs.presentation.User.UserItemView
+import ru.varasoft.popularlibs.presentation.UserItemView
 
 interface IUserListPresenter : IListPresenter<UserItemView>

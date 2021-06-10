@@ -1,4 +1,4 @@
-package ru.varasoft.popularlibs.presentation.Users
+package ru.varasoft.popularlibs.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
