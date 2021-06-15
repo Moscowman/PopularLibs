@@ -1,7 +1,7 @@
 package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.disposables.Disposable
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.data.user.UserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser

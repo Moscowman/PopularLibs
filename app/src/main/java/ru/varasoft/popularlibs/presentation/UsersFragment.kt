@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.AndroidScreens
 import ru.varasoft.popularlibs.App
 import ru.varasoft.popularlibs.BackButtonListener
-import ru.varasoft.popularlibs.data.user.UserRepositoryFactory
+import ru.varasoft.popularlibs.data.user.GithubUserRepository
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
@@ -17,7 +18,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(UserRepositoryFactory.create(), App.instance.router, AndroidScreens()) }
+    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(AndroidSchedulers.mainThread(), GithubUserRepository(), App.instance.router, AndroidScreens()) }
     var adapter: UsersRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
