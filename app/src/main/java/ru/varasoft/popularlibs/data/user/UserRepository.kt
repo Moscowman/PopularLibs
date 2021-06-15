@@ -1,5 +1,6 @@
 package ru.varasoft.popularlibs.data.user
 
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import ru.varasoft.popularlibs.data.user.model.GithubUser
 
@@ -16,6 +17,6 @@ interface UserRepository {
      * @param userId идентифиактор пользователя
      * @return пользователь
      */
-    fun fetchUserById(userId: String): Single<GithubUser>
+    fun fetchUserById(userId: String): Maybe<GithubUser?>
 
 }

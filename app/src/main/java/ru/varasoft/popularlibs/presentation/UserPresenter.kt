@@ -1,6 +1,7 @@
 package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.data.user.UserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
@@ -10,14 +11,19 @@ class UserPresenter(
     private val router: Router,
     private val userRepository: UserRepository
 ) : MvpPresenter<UserView>() {
+
+    lateinit var userDisposable: Disposable
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         var user: GithubUser? = null
-        val disposable = userRepository.fetchUserById(userId)
+        userDisposable = userRepository.fetchUserById(userId)
             .subscribe({ s ->
                 user = s
-            })
-        disposable.dispose()
+            },
+                {
+                    println("onError: ${it.message}")
+                })
         user
             ?.login
             ?.let(viewState::setLogin)
@@ -26,5 +32,10 @@ class UserPresenter(
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        userDisposable.dispose()
     }
 }

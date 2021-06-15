@@ -1,6 +1,7 @@
 package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.IScreens
 import ru.varasoft.popularlibs.IUserListPresenter
@@ -9,6 +10,7 @@ import ru.varasoft.popularlibs.data.user.model.GithubUser
 
 class UsersPresenter(val usersRepo: UserRepository, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {
+
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -22,6 +24,7 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
     }
 
     val usersListPresenter = UsersListPresenter()
+    lateinit var listDisposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,11 +34,11 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
         usersListPresenter.itemClickListener = { itemView ->
             val login = itemView.getLogin()
             var users: List<GithubUser>? = null
-            val disposable = usersRepo.fetchUsers()
+            listDisposable = usersRepo.fetchUsers()
                 .subscribe({ s ->
                     users = s
-                })
-            disposable.dispose()
+                },
+                    {println("onError: ${it.message}")})
             if (users != null) {
                 for (item in users!!) {
                     if (item.login == login) {
@@ -49,13 +52,17 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
 
     fun loadData() {
         var users: List<GithubUser>? = null
-        val disposable = usersRepo.fetchUsers()
+        listDisposable = usersRepo.fetchUsers()
             .subscribe({ s ->
                 users = s
             })
         users?.let { usersListPresenter.users.addAll(it) }
         viewState.updateList()
-        disposable.dispose()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        listDisposable.dispose()
     }
 
     fun backPressed(): Boolean {
