@@ -7,20 +7,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.varasoft.popularlibs.AndroidScreens
-import ru.varasoft.popularlibs.App
-import ru.varasoft.popularlibs.BackButtonListener
-import ru.varasoft.popularlibs.GlideImageLoader
+import ru.varasoft.popularlibs.*
 import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
-class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
+class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
     companion object {
-        fun newInstance() = UsersFragment()
+
+        private const val ARG_REPOS_URL = "ReposUrl"
+
+        fun newInstance(reposUrl: String) = ReposFragment()
+            .arguments(ARG_REPOS_URL to reposUrl)
     }
 
-    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(AndroidSchedulers.mainThread(), GithubUserRepository(), App.instance.router, AndroidScreens()) }
-    var adapter: UsersRVAdapter? = null
+    private val reposUrl: String by lazy {
+        arguments?.getString(ARG_REPOS_URL) ?: ""
+    }
+    val presenter: ReposPresenter by moxyPresenter { ReposPresenter(reposUrl, AndroidSchedulers.mainThread(), GithubUserRepository(), App.instance.router, AndroidScreens()) }
+    var adapter: ReposRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
 
@@ -36,7 +40,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun init() {
         vb?.rvUsers?.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = ReposRVAdapter(presenter.reposListPresenter, GlideImageLoader())
         vb?.rvUsers?.adapter = adapter
     }
 

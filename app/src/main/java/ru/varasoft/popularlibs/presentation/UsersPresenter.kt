@@ -32,7 +32,7 @@ class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo
 
         usersListPresenter.itemClickListener = { itemView ->
             val user = usersListPresenter.users[itemView.pos]
-            router.navigateTo(screens.user(user))
+            user.reposUrl?.let {router.navigateTo(screens.repos(it))}
         }
     }
 

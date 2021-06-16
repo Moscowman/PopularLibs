@@ -7,7 +7,7 @@ import ru.varasoft.popularlibs.data.user.model.GithubUser
 import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
 
 class UserPresenter(
-    private val user: GithubUser,
+    private val userId: String,
     private val router: Router,
     private val userRepository: IGithubUsersRepo
 ) : MvpPresenter<UserView>() {
@@ -17,7 +17,7 @@ class UserPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         var user: GithubUser? = null
-        userDisposable = userRepository.getUsers(this.user)
+        userDisposable = userRepository.getUserById(userId)
             .subscribe({ s ->
                 user = s
             },

@@ -9,8 +9,7 @@ import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.App
 import ru.varasoft.popularlibs.BackButtonListener
 import ru.varasoft.popularlibs.arguments
-import ru.varasoft.popularlibs.data.user.GithubUserRepository
-import ru.varasoft.popularlibs.data.user.UserRepositoryFactory
+import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
 import ru.varasoft.popularlibs.databinding.FragmentUserBinding
 
@@ -24,12 +23,13 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
                 .arguments(ARG_USER_ID to userId)
     }
 
-    private val user: GithubUser? by lazy {
-        arguments?.getParcelable(ARG_USER_ID)
+    private val userId: String by lazy {
+        arguments?.getString(ARG_USER_ID) ?: ""
     }
+
     val presenter: UserPresenter by moxyPresenter {
         UserPresenter(
-            user!!,
+            userId,
             App.instance.router,
             userRepository = GithubUserRepository()
         )

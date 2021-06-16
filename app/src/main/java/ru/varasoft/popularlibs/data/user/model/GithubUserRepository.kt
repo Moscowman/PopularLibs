@@ -1,14 +1,14 @@
-package ru.varasoft.popularlibs.data.user
+package ru.varasoft.popularlibs.data.user.model
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.varasoft.popularlibs.data.user.model.GithubUser
-import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
+import ru.varasoft.popularlibs.data.user.IDataSource
 
 class GithubUserRepository() : IGithubUsersRepo {
 
@@ -33,4 +33,12 @@ class GithubUserRepository() : IGithubUsersRepo {
 
     override fun getUsers() =
         api.getUsers().subscribeOn(Schedulers.io())
+
+    override fun getUserById(userId: String): Maybe<GithubUser> {
+        return api.getUser(userId)
+    }
+
+    override fun getRepos(reposUrl: String): Single<List<String>> {
+        return api.getRepos(reposUrl)
+    }
 }
