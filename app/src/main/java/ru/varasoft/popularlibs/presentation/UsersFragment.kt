@@ -10,6 +10,7 @@ import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.AndroidScreens
 import ru.varasoft.popularlibs.App
 import ru.varasoft.popularlibs.BackButtonListener
+import ru.varasoft.popularlibs.GlideImageLoader
 import ru.varasoft.popularlibs.data.user.GithubUserRepository
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
@@ -35,7 +36,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun init() {
         vb?.rvUsers?.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter)
+        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
         vb?.rvUsers?.adapter = adapter
     }
 

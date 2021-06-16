@@ -2,11 +2,13 @@ package ru.varasoft.popularlibs.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import ru.varasoft.popularlibs.IImageLoader
 import ru.varasoft.popularlibs.IUserListPresenter
 import ru.varasoft.popularlibs.databinding.ItemUserBinding
 
-class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+class UsersRVAdapter(val presenter: IUserListPresenter, val imageLoader: IImageLoader<ImageView>): RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)).apply {
@@ -27,6 +29,10 @@ class UsersRVAdapter(val presenter: IUserListPresenter) : RecyclerView.Adapter<U
 
         override fun getLogin(): String = with(vb) {
             return tvLogin.text.toString()
+        }
+
+        override fun loadAvatar(url: String) = with(vb) {
+            imageLoader.loadInto(url, vb.ivAvatar)
         }
     }
 }
