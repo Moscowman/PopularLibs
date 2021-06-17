@@ -1,14 +1,14 @@
-package ru.varasoft.popularlibs.presentation.Users
+package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.Scheduler
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.IScreens
 import ru.varasoft.popularlibs.IUserListPresenter
-import ru.varasoft.popularlibs.data.user.UserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
-import ru.varasoft.popularlibs.presentation.User.UserItemView
+import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
 
-class UsersPresenter(val usersRepo: UserRepository, val router: Router, val screens: IScreens) :
+class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -18,7 +18,8 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
 
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
-            view.setLogin(user.login)
+            user.login?.let { view.setLogin(it) }
+            user.avatarUrl?.let {view.loadAvatar(it)}
         }
     }
 
@@ -30,25 +31,25 @@ class UsersPresenter(val usersRepo: UserRepository, val router: Router, val scre
         loadData()
 
         usersListPresenter.itemClickListener = { itemView ->
-            val login = itemView.getLogin()
-            for (item in usersRepo.fetchUsers()) {
-                if (item.login == login) {
-                    router.navigateTo(screens.user(item.login))
-                    break
-                }
-            }
+            val user = usersListPresenter.users[itemView.pos]
+            user.login?.let {router.navigateTo(screens.repos(it))}
         }
     }
 
     fun loadData() {
-        val users = usersRepo.fetchUsers()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+        usersRepo.getUsers()
+            .observeOn(uiScheduler)
+            .subscribe({ users ->
+                usersListPresenter.users.clear()
+                usersListPresenter.users.addAll(users)
+                viewState.updateList()
+            }, {
+                println("Error: ${it.message}")
+            })
     }
 
     fun backPressed(): Boolean {
         router.exit()
         return true
     }
-
 }
