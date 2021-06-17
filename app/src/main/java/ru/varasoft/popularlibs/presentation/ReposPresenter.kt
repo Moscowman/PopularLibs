@@ -41,7 +41,7 @@ class ReposPresenter(
 
         reposListPresenter.itemClickListener = { itemView ->
             val repo = reposListPresenter.repos[itemView.pos]
-            //TODO: router.navigateTo(screens.repo(repo))
+            router.navigateTo(screens.repo(repo))
         }
     }
 
