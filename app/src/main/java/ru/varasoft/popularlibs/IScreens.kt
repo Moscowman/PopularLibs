@@ -6,5 +6,5 @@ import ru.varasoft.popularlibs.data.user.model.GithubUser
 interface IScreens {
     fun users(): Screen
     fun user(userId: GithubUser): Screen
-    fun repos(reposUrl: String): Screen
+    fun repos(userLogin: String): Screen
 }

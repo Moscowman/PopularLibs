@@ -35,10 +35,10 @@ class GithubUserRepository() : IGithubUsersRepo {
         api.getUsers().subscribeOn(Schedulers.io())
 
     override fun getUserById(userId: String): Maybe<GithubUser> {
-        return api.getUser(userId)
+        return api.getUser(userId).subscribeOn(Schedulers.io())
     }
 
-    override fun getRepos(reposUrl: String): Single<List<String>> {
-        return api.getRepos(reposUrl)
+    override fun getRepos(userLogin: String): Single<List<GithubRepo>> {
+        return api.getRepos(userLogin).subscribeOn(Schedulers.io())
     }
 }

@@ -32,16 +32,16 @@ class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo
 
         usersListPresenter.itemClickListener = { itemView ->
             val user = usersListPresenter.users[itemView.pos]
-            user.reposUrl?.let {router.navigateTo(screens.repos(it))}
+            user.login?.let {router.navigateTo(screens.repos(it))}
         }
     }
 
     fun loadData() {
         usersRepo.getUsers()
             .observeOn(uiScheduler)
-            .subscribe({ repos ->
+            .subscribe({ users ->
                 usersListPresenter.users.clear()
-                usersListPresenter.users.addAll(repos)
+                usersListPresenter.users.addAll(users)
                 viewState.updateList()
             }, {
                 println("Error: ${it.message}")

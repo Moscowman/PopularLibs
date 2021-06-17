@@ -6,11 +6,11 @@ import io.reactivex.disposables.Disposable
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.IRepoListPresenter
 import ru.varasoft.popularlibs.IScreens
-import ru.varasoft.popularlibs.data.user.model.GithubUser
+import ru.varasoft.popularlibs.data.user.model.GithubRepo
 import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
 
 class ReposPresenter(
-    val reposUrl: String,
+    val userId: String,
     val uiScheduler: Scheduler,
     val usersRepo: IGithubUsersRepo,
     val router: Router,
@@ -18,14 +18,14 @@ class ReposPresenter(
 ) :
     MvpPresenter<ReposView>() {
     class ReposListPresenter : IRepoListPresenter {
-        val repos = mutableListOf<String>()
+        val repos = mutableListOf<GithubRepo>()
         override var itemClickListener: ((RepoItemView) -> Unit)? = null
 
         override fun getCount() = repos.size
 
         override fun bindView(view: RepoItemView) {
             val repo = repos[view.pos]
-            repo?.let { view.setName(it) }
+            repo?.let { it.name?.let { it1 -> view.setName(it1) } }
         }
     }
 
@@ -37,7 +37,7 @@ class ReposPresenter(
         super.onFirstViewAttach()
 
         viewState.init()
-        loadData(reposUrl)
+        loadData(userId)
 
         reposListPresenter.itemClickListener = { itemView ->
             val repo = reposListPresenter.repos[itemView.pos]
@@ -45,8 +45,8 @@ class ReposPresenter(
         }
     }
 
-    fun loadData(reposUrl: String) {
-        usersRepo.getRepos(reposUrl)
+    fun loadData(userLogin: String) {
+        usersRepo.getRepos(userLogin)
             .observeOn(uiScheduler)
             .subscribe({ repos ->
                 reposListPresenter.repos.clear()

@@ -14,14 +14,14 @@ import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
     companion object {
 
-        private const val ARG_REPOS_URL = "ReposUrl"
+        private const val USER_ID = "UserId"
 
         fun newInstance(reposUrl: String) = ReposFragment()
-            .arguments(ARG_REPOS_URL to reposUrl)
+            .arguments(USER_ID to reposUrl)
     }
 
     private val reposUrl: String by lazy {
-        arguments?.getString(ARG_REPOS_URL) ?: ""
+        arguments?.getString(USER_ID) ?: ""
     }
     val presenter: ReposPresenter by moxyPresenter { ReposPresenter(reposUrl, AndroidSchedulers.mainThread(), GithubUserRepository(), App.instance.router, AndroidScreens()) }
     var adapter: ReposRVAdapter? = null
