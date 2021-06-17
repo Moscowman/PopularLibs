@@ -12,8 +12,6 @@ class RepoPresenter(
     private val router: Router,
 ) : MvpPresenter<RepoView>() {
 
-    lateinit var userDisposable: Disposable
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         repo?.apply {
@@ -27,10 +25,5 @@ class RepoPresenter(
     fun backPressed(): Boolean {
         router.exit()
         return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        userDisposable.dispose()
     }
 }

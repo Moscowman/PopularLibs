@@ -16,8 +16,6 @@ class RepoFragment : MvpAppCompatFragment(), RepoView, BackButtonListener {
 
         private const val ARG_REPO = "GithubRepo"
 
-        var repo: GithubRepo? = null
-
         fun newInstance(repo: GithubRepo): Fragment {
             val myFragment = RepoFragment()
             val args = Bundle()
