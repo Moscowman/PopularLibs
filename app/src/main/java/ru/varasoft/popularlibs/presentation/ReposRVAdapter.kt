@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.varasoft.popularlibs.IImageLoader
+import ru.varasoft.popularlibs.IRepoListPresenter
 import ru.varasoft.popularlibs.IUserListPresenter
+import ru.varasoft.popularlibs.databinding.ItemRepoBinding
 import ru.varasoft.popularlibs.databinding.ItemUserBinding
 
-class UsersRVAdapter(val presenter: IUserListPresenter, val imageLoader: IImageLoader<ImageView>): RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+class ReposRVAdapter(val presenter: IRepoListPresenter, val imageLoader: IImageLoader<ImageView>): RecyclerView.Adapter<ReposRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)).apply {
+        ViewHolder(ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)).apply {
             itemView.setOnClickListener { presenter.itemClickListener?.invoke(this) }
         }
 
@@ -19,20 +21,12 @@ class UsersRVAdapter(val presenter: IUserListPresenter, val imageLoader: IImageL
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = presenter.bindView(holder.apply { pos = position })
 
-    inner class ViewHolder(val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root),
-        UserItemView {
+    inner class ViewHolder(val vb: ItemRepoBinding) : RecyclerView.ViewHolder(vb.root),
+        RepoItemView {
         override var pos = -1
 
-        override fun setLogin(text: String) = with(vb) {
-            tvLogin.text = text
-        }
-
-        override fun getLogin(): String = with(vb) {
-            return tvLogin.text.toString()
-        }
-
-        override fun loadAvatar(url: String) = with(vb) {
-            imageLoader.loadInto(url, vb.ivAvatar)
+        override fun setName(text: String) {
+            vb.repoName.text = text
         }
     }
 }

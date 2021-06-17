@@ -1,7 +1,7 @@
 package ru.varasoft.popularlibs.data.user
 
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.Maybe
+import io.reactivex.Single
 import ru.varasoft.popularlibs.data.user.model.GithubUser
 
 interface UserRepository {
