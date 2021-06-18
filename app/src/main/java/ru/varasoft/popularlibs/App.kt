@@ -3,6 +3,7 @@ package ru.varasoft.popularlibs
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
+import ru.varasoft.popularlibs.data.user.Database
 
 class App : Application() {
     companion object {
@@ -19,5 +20,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Database.create(this)
     }
 }

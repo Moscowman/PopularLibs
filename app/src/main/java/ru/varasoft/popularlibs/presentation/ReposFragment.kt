@@ -8,6 +8,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.*
+import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
+import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
@@ -23,12 +25,21 @@ class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
     private val reposUrl: String by lazy {
         arguments?.getString(USER_ID) ?: ""
     }
-    val presenter: ReposPresenter by moxyPresenter { ReposPresenter(reposUrl, AndroidSchedulers.mainThread(), GithubUserRepository(), App.instance.router, AndroidScreens()) }
+    val presenter: ReposPresenter by moxyPresenter {
+        ReposPresenter(
+            reposUrl, AndroidSchedulers.mainThread(), GithubUserRepository(
+                GithubUserRepository.api, AndroidNetworkStatus(requireContext()), Database.getInstance()
+            ), App.instance.router, AndroidScreens())
+    }
     var adapter: ReposRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
         FragmentUsersBinding.inflate(inflater, container, false).also {
             vb = it
         }.root
