@@ -13,6 +13,8 @@ import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
 import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
+import ru.varasoft.popularlibs.data.user.model.RoomGithubReposCache
+import ru.varasoft.popularlibs.data.user.model.RoomGithubUsersCache
 import ru.varasoft.popularlibs.databinding.FragmentUserBinding
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
@@ -33,7 +35,12 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         UserPresenter(
             userId,
             App.instance.router,
-            userRepository = GithubUserRepository(GithubUserRepository.api, AndroidNetworkStatus(requireContext()), Database.getInstance())
+            userRepository = GithubUserRepository(
+                GithubUserRepository.api,
+                AndroidNetworkStatus(requireContext()),
+                RoomGithubUsersCache(Database.getInstance()),
+                RoomGithubReposCache(Database.getInstance()),
+            )
         )
     }
 

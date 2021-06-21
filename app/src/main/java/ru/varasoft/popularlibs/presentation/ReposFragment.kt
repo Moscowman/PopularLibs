@@ -11,6 +11,8 @@ import ru.varasoft.popularlibs.*
 import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
 import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
+import ru.varasoft.popularlibs.data.user.model.RoomGithubReposCache
+import ru.varasoft.popularlibs.data.user.model.RoomGithubUsersCache
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
 class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
@@ -28,8 +30,12 @@ class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
     val presenter: ReposPresenter by moxyPresenter {
         ReposPresenter(
             reposUrl, AndroidSchedulers.mainThread(), GithubUserRepository(
-                GithubUserRepository.api, AndroidNetworkStatus(requireContext()), Database.getInstance()
-            ), App.instance.router, AndroidScreens())
+                GithubUserRepository.api,
+                AndroidNetworkStatus(requireContext()),
+                RoomGithubUsersCache(Database.getInstance()),
+                RoomGithubReposCache(Database.getInstance()),
+            ), App.instance.router, AndroidScreens()
+        )
     }
     var adapter: ReposRVAdapter? = null
 

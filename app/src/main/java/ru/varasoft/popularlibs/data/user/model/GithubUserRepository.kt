@@ -10,7 +10,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.varasoft.popularlibs.data.user.*
 
-class GithubUserRepository(val api: IDataSource, val networkStatus: INetworkStatus, val db: Database) : IGithubUsersRepo {
+class GithubUserRepository(
+    private val api: IDataSource,
+    private val networkStatus: INetworkStatus,
+    private val roomGithubUsersCache: IGithubUsersCache,
+    private val roomGithubReposCache: IGithubReposCache
+) : IGithubUsersRepo {
     companion object {
         var api: IDataSource
 
@@ -35,16 +40,13 @@ class GithubUserRepository(val api: IDataSource, val networkStatus: INetworkStat
             api.getUsers()
                 .flatMap { users ->
                     Single.fromCallable {
-                        val roomUsers = users.map { user -> RoomGithubUser(user.id ?: "", user.login ?: "", user.avatarUrl ?: "", user.reposUrl ?: "") }
-                        db.userDao.insert(roomUsers)
+                        roomGithubUsersCache.insertUsers(users)
                         users
                     }
                 }
         } else {
             Single.fromCallable {
-                db.userDao.getAll().map { roomUser ->
-                    GithubUser(roomUser.id, roomUser.login, roomUser.avatarUrl, roomUser.reposUrl)
-                }
+                roomGithubUsersCache.getUsers()
             }
         }
     }.subscribeOn(Schedulers.io())
@@ -59,19 +61,16 @@ class GithubUserRepository(val api: IDataSource, val networkStatus: INetworkStat
                 api.getRepos(userLogin)
                     .flatMap { repositories ->
                         Single.fromCallable {
-                            val roomUser = userLogin?.let { db.userDao.findByLogin(it) } ?: throw RuntimeException("No such user in cache")
-                            val roomRepos = repositories.map { RoomGithubRepository(it.id ?: "", it.name ?: "", it.forks ?: 0, roomUser.id) }
-                            db.repositoryDao.insert(roomRepos)
-                            repositories
-                        }
+                            roomGithubReposCache.insertRepos(repositories, userLogin)
                     }
-            } ?: Single.error<List<GithubRepo>>(RuntimeException("User has no repos url")).subscribeOn(Schedulers.io())
-        } else {
-            Single.fromCallable {
-                val roomUser = userLogin?.let { db.userDao.findByLogin(it) } ?: throw RuntimeException("No such user in cache")
-                db.repositoryDao.findForUser(roomUser.id).map { GithubRepo(it.id, it.name, null, it.forksCount) }
             }
-
         }
-    }.subscribeOn(Schedulers.io())
+    } else
+    {
+        Single.fromCallable {
+            roomGithubReposCache.getRepos(userLogin)
+        }
+
+    }
+}.subscribeOn(Schedulers.io())
 }

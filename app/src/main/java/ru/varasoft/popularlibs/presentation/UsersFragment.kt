@@ -14,6 +14,8 @@ import ru.varasoft.popularlibs.GlideImageLoader
 import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
 import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
+import ru.varasoft.popularlibs.data.user.model.RoomGithubReposCache
+import ru.varasoft.popularlibs.data.user.model.RoomGithubUsersCache
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
@@ -21,12 +23,28 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(AndroidSchedulers.mainThread(), GithubUserRepository(GithubUserRepository.api, AndroidNetworkStatus(requireContext()), Database.getInstance()), App.instance.router, AndroidScreens()) }
+    val presenter: UsersPresenter by moxyPresenter {
+        UsersPresenter(
+            AndroidSchedulers.mainThread(),
+            GithubUserRepository(
+                GithubUserRepository.api,
+                AndroidNetworkStatus(requireContext()),
+                RoomGithubUsersCache(Database.getInstance()),
+                RoomGithubReposCache(Database.getInstance())
+                ),
+            App.instance.router,
+            AndroidScreens()
+        )
+    }
     var adapter: UsersRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) =
         FragmentUsersBinding.inflate(inflater, container, false).also {
             vb = it
         }.root
