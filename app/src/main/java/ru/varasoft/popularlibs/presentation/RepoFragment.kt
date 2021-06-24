@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.github.terrakok.cicerone.Router
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.App
 import ru.varasoft.popularlibs.BackButtonListener
 import ru.varasoft.popularlibs.data.user.model.GithubRepo
 import ru.varasoft.popularlibs.databinding.FragmentRepoBinding
+import javax.inject.Inject
 
 class RepoFragment : MvpAppCompatFragment(), RepoView, BackButtonListener {
+
+    @Inject
+    lateinit var router: Router
+
     companion object {
 
         private const val ARG_REPO = "GithubRepo"
@@ -33,7 +39,7 @@ class RepoFragment : MvpAppCompatFragment(), RepoView, BackButtonListener {
     val presenter: RepoPresenter by moxyPresenter {
         RepoPresenter(
             repo,
-            App.instance.router
+            router
         )
     }
 

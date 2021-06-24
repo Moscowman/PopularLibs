@@ -7,9 +7,18 @@ import ru.varasoft.popularlibs.IScreens
 import ru.varasoft.popularlibs.IUserListPresenter
 import ru.varasoft.popularlibs.data.user.model.GithubUser
 import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
+import javax.inject.Inject
 
-class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router, val screens: IScreens) :
+class UsersPresenter(val uiScheduler: Scheduler) :
     MvpPresenter<UsersView>() {
+
+    @Inject
+    lateinit var usersRepo: IGithubUsersRepo
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var screens: IScreens
+
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -19,7 +28,7 @@ class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
             user.login?.let { view.setLogin(it) }
-            user.avatarUrl?.let {view.loadAvatar(it)}
+            user.avatarUrl?.let { view.loadAvatar(it) }
         }
     }
 
@@ -32,7 +41,7 @@ class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo
 
         usersListPresenter.itemClickListener = { itemView ->
             val user = usersListPresenter.users[itemView.pos]
-            user.login?.let {router.navigateTo(screens.repos(it))}
+            user.login?.let { router.navigateTo(screens.repos(it)) }
         }
     }
 

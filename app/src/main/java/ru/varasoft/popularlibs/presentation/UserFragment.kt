@@ -4,20 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.github.terrakok.cicerone.Router
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.varasoft.popularlibs.App
-import ru.varasoft.popularlibs.BackButtonListener
-import ru.varasoft.popularlibs.arguments
+import ru.varasoft.popularlibs.*
 import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
 import ru.varasoft.popularlibs.data.user.Database
-import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.data.user.model.GithubUser
+import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.data.user.model.RoomGithubReposCache
 import ru.varasoft.popularlibs.data.user.model.RoomGithubUsersCache
 import ru.varasoft.popularlibs.databinding.FragmentUserBinding
+import javax.inject.Inject
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
+
+    @Inject
+    lateinit var database: Database
+
+    @Inject
+    lateinit var router: Router
+
     companion object {
 
         private const val ARG_USER_ID = "GithubUser"
@@ -32,17 +39,14 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     }
 
     val presenter: UserPresenter by moxyPresenter {
+        val user = arguments?.getParcelable<GithubUser>(ARG_USER_ID) as GithubUser
         UserPresenter(
-            userId,
-            App.instance.router,
-            userRepository = GithubUserRepository(
-                GithubUserRepository.api,
-                AndroidNetworkStatus(requireContext()),
-                RoomGithubUsersCache(Database.getInstance()),
-                RoomGithubReposCache(Database.getInstance()),
-            )
+            user.id,
+            router,
+            GithubUserRepository(GithubUserRepository.api, AndroidNetworkStatus(App.instance), RoomGithubUsersCache(database), RoomGithubReposCache(database)),
         )
     }
+
 
     private var vb: FragmentUserBinding? = null
 
