@@ -4,44 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.github.terrakok.cicerone.Router
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.varasoft.popularlibs.App
 import ru.varasoft.popularlibs.BackButtonListener
-import ru.varasoft.popularlibs.data.user.model.GithubRepo
+import ru.varasoft.popularlibs.data.user.model.GithubRepoDescription
 import ru.varasoft.popularlibs.databinding.FragmentRepoBinding
-import javax.inject.Inject
 
 class RepoFragment : MvpAppCompatFragment(), RepoView, BackButtonListener {
-
-    @Inject
-    lateinit var router: Router
 
     companion object {
 
         private const val ARG_REPO = "GithubRepo"
 
-        fun newInstance(repo: GithubRepo): Fragment {
-            val myFragment = RepoFragment().apply {
-                App.instance.appComponent.inject(this)
-            }
+        fun newInstance(repoDescription: GithubRepoDescription): Fragment {
+            val myFragment = RepoFragment()
             val args = Bundle()
-            args.putParcelable(ARG_REPO, repo)
+            args.putParcelable(ARG_REPO, repoDescription)
             myFragment.setArguments(args)
             return myFragment
         }
     }
 
-    private val repo : GithubRepo? by lazy {
+    private val repoDescription : GithubRepoDescription? by lazy {
         arguments?.getParcelable(ARG_REPO)
     }
 
     val presenter: RepoPresenter by moxyPresenter {
-        RepoPresenter(
-            repo,
-            router
-        )
+        RepoPresenter(repoDescription).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private var vb: FragmentRepoBinding? = null

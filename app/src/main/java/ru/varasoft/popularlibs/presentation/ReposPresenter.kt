@@ -2,23 +2,33 @@ package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import moxy.MvpPresenter
 import ru.varasoft.popularlibs.IRepoListPresenter
 import ru.varasoft.popularlibs.IScreens
-import ru.varasoft.popularlibs.data.user.model.GithubRepo
+import ru.varasoft.popularlibs.data.user.model.GithubRepoDescription
 import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
+import javax.inject.Inject
 
 class ReposPresenter(
-    val userId: String,
-    val uiScheduler: Scheduler,
-    val usersRepo: IGithubUsersRepo,
-    val router: Router,
-    val screens: IScreens
+    val userId: String
 ) :
     MvpPresenter<ReposView>() {
+
+    @Inject
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var repo: IGithubUsersRepo
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screens: IScreens
+
+
     class ReposListPresenter : IRepoListPresenter {
-        val repos = mutableListOf<GithubRepo>()
+        val repos = mutableListOf<GithubRepoDescription>()
         override var itemClickListener: ((RepoItemView) -> Unit)? = null
 
         override fun getCount() = repos.size
@@ -44,7 +54,7 @@ class ReposPresenter(
     }
 
     fun loadData(userLogin: String) {
-        usersRepo.getRepos(userLogin)
+        repo.getRepos(userLogin)
             .observeOn(uiScheduler)
             .subscribe({ repos ->
                 reposListPresenter.repos.clear()

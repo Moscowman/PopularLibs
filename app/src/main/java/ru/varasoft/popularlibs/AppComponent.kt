@@ -11,7 +11,8 @@ import javax.inject.Singleton
         CiceroneModule::class,
         CacheModule::class,
         ApiModule::class,
-        RepoModule::class
+        RepoModule::class,
+        SchedulerModule::class
     ]
 )
 interface AppComponent {
@@ -22,9 +23,5 @@ interface AppComponent {
 
     fun inject(reposPresenter: ReposPresenter)
 
-    //При выполнении практического задания это должно отсюда уйти
-    fun inject(userFragment: UserFragment)
-    fun inject(reposFragment: ReposFragment)
-    fun inject(repoFragment: RepoFragment)
-    fun inject(usersFragment: UsersFragment)
+    fun inject(repoPresenter: RepoPresenter)
 }

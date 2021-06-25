@@ -23,6 +23,7 @@ class App : Application() {
 
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
+            .schedulerModule(SchedulerModule(this))
             .build()
         Database.create(this)
     }

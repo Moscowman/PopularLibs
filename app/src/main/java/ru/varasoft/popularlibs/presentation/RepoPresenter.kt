@@ -1,20 +1,18 @@
 package ru.varasoft.popularlibs.presentation
 
 import com.github.terrakok.cicerone.Router
-import io.reactivex.disposables.Disposable
 import moxy.MvpPresenter
-import ru.varasoft.popularlibs.data.user.model.GithubRepo
-import ru.varasoft.popularlibs.data.user.model.GithubUser
-import ru.varasoft.popularlibs.data.user.model.IGithubUsersRepo
+import ru.varasoft.popularlibs.data.user.model.GithubRepoDescription
+import javax.inject.Inject
 
-class RepoPresenter(
-    private val repo: GithubRepo?,
-    private val router: Router,
-) : MvpPresenter<RepoView>() {
+class RepoPresenter(val repoDescription: GithubRepoDescription?) : MvpPresenter<RepoView>() {
+
+    @Inject
+    lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        repo?.apply {
+        repoDescription?.apply {
             name?.let(viewState::setName)
             fullName?.let(viewState::setFullName)
             forks?.let(viewState::setNoOfForks)

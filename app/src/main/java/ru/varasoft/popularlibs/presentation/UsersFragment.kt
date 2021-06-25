@@ -24,9 +24,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    @Inject
-    lateinit var database: Database
-
     val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(AndroidSchedulers.mainThread()).apply {
             App.instance.appComponent.inject(this)
