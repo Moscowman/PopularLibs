@@ -6,5 +6,5 @@ import io.reactivex.Single
 interface IGithubUsersRepo {
     fun getUsers(): Single<List<GithubUser>>
     fun getUserById(userId: String): Maybe<GithubUser>
-    fun getRepos(reposUrl: String): Single<List<GithubRepo>>
+    fun getRepos(reposUrl: String): Single<List<GithubRepoDescription>>
 }

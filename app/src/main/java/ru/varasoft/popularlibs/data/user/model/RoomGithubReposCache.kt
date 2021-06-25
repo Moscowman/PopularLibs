@@ -4,7 +4,7 @@ import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.RoomGithubRepository
 
 class RoomGithubReposCache(private val db: Database) : IGithubReposCache {
-    override fun insertRepos(repositories: List<GithubRepo>, userLogin: String): List<GithubRepo> {
+    override fun insertRepos(repositories: List<GithubRepoDescription>, userLogin: String): List<GithubRepoDescription> {
         val roomUser = userLogin?.let { db.userDao.findByLogin(it) }
             ?: throw RuntimeException("No such user in cache")
         val roomRepos = repositories.map {
@@ -19,12 +19,12 @@ class RoomGithubReposCache(private val db: Database) : IGithubReposCache {
         return repositories
     }
 
-    override fun getRepos(userLogin: String): List<GithubRepo> {
+    override fun getRepos(userLogin: String): List<GithubRepoDescription> {
         val roomUser = userLogin?.let { db.userDao.findByLogin(it) }
             ?: throw RuntimeException("No such user in cache")
         return db.repositoryDao.findForUser(roomUser.id)
             .map {
-                GithubRepo(it.id, it.name, null, it.forksCount)
+                GithubRepoDescription(it.id, it.name, null, it.forksCount)
             }
     }
 }

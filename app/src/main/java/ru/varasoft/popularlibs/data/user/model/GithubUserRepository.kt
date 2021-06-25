@@ -62,15 +62,14 @@ class GithubUserRepository(
                     .flatMap { repositories ->
                         Single.fromCallable {
                             roomGithubReposCache.insertRepos(repositories, userLogin)
+                        }
                     }
             }
-        }
-    } else
-    {
-        Single.fromCallable {
-            roomGithubReposCache.getRepos(userLogin)
-        }
+        } else {
+            Single.fromCallable {
+                roomGithubReposCache.getRepos(userLogin)
+            }
 
-    }
-}.subscribeOn(Schedulers.io())
+        }
+    }.subscribeOn(Schedulers.io())
 }

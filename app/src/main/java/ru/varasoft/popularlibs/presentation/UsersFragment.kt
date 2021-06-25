@@ -17,6 +17,7 @@ import ru.varasoft.popularlibs.data.user.model.GithubUserRepository
 import ru.varasoft.popularlibs.data.user.model.RoomGithubReposCache
 import ru.varasoft.popularlibs.data.user.model.RoomGithubUsersCache
 import ru.varasoft.popularlibs.databinding.FragmentUsersBinding
+import javax.inject.Inject
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     companion object {
@@ -24,18 +25,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter(
-            AndroidSchedulers.mainThread(),
-            GithubUserRepository(
-                GithubUserRepository.api,
-                AndroidNetworkStatus(requireContext()),
-                RoomGithubUsersCache(Database.getInstance()),
-                RoomGithubReposCache(Database.getInstance())
-                ),
-            App.instance.router,
-            AndroidScreens()
-        )
+        UsersPresenter(AndroidSchedulers.mainThread()).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
+
     var adapter: UsersRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
