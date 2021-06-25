@@ -15,4 +15,5 @@ class RepoModule {
     @Singleton
     @Provides
     fun usersRepo(api: IDataSource, networkStatus: INetworkStatus, usersCache: IGithubUsersCache, reposCache: IGithubReposCache): IGithubUsersRepo = GithubUserRepository(api, networkStatus, usersCache, reposCache)
+
 }

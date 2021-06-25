@@ -1,6 +1,5 @@
 package ru.varasoft.popularlibs
 
-import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.varasoft.popularlibs.data.user.model.GithubRepo
 import ru.varasoft.popularlibs.data.user.model.GithubUser
@@ -13,5 +12,5 @@ class AndroidScreens : IScreens {
     override fun users() = FragmentScreen { UsersFragment.newInstance() }
     override fun user(userId: GithubUser) = FragmentScreen { UserFragment.newInstance(userId) }
     override fun repos(userLogin: String) = FragmentScreen { ReposFragment.newInstance(userLogin) }
-    override fun repo(repo: GithubRepo): Screen = FragmentScreen { RepoFragment.newInstance(repo) }
+    override fun repo(repo: GithubRepo) = FragmentScreen { RepoFragment.newInstance(repo) }
 }

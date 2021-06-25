@@ -20,6 +20,8 @@ interface AppComponent {
 
     fun inject(usersPresenter: UsersPresenter)
 
+    fun inject(reposPresenter: ReposPresenter)
+
     //При выполнении практического задания это должно отсюда уйти
     fun inject(userFragment: UserFragment)
     fun inject(reposFragment: ReposFragment)

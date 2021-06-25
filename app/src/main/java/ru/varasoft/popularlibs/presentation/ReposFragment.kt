@@ -3,14 +3,12 @@ package ru.varasoft.popularlibs.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.terrakok.cicerone.Router
 import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.varasoft.popularlibs.AndroidScreens
-import ru.varasoft.popularlibs.App
-import ru.varasoft.popularlibs.BackButtonListener
-import ru.varasoft.popularlibs.arguments
+import ru.varasoft.popularlibs.*
 import ru.varasoft.popularlibs.data.user.AndroidNetworkStatus
 import ru.varasoft.popularlibs.data.user.Database
 import ru.varasoft.popularlibs.data.user.model.GithubRepo
@@ -22,14 +20,17 @@ import javax.inject.Inject
 
 class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
 
-    @Inject lateinit var router: Router
+    @Inject
+    lateinit var router: Router
 
     companion object {
 
         private const val REPOSITORY_ARG = "RepositoryArg"
 
-        fun newInstance(reposUrl: String) = ReposFragment()
-            .arguments(REPOSITORY_ARG to reposUrl)
+        fun newInstance(reposUrl: String) = ReposFragment().apply {
+            arguments(REPOSITORY_ARG to reposUrl)
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private val reposUrl: String by lazy {
@@ -43,7 +44,7 @@ class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
                 AndroidNetworkStatus(requireContext()),
                 RoomGithubUsersCache(Database.getInstance()),
                 RoomGithubReposCache(Database.getInstance()),
-            ), App.instance.router, AndroidScreens()
+            ), router, AndroidScreens()
         )
     }
     var adapter: ReposRVAdapter? = null
@@ -64,7 +65,11 @@ class ReposFragment : MvpAppCompatFragment(), ReposView, BackButtonListener {
         vb = null
     }
 
-    override fun init() {}
+    override fun init() {
+        vb?.rvUsers?.layoutManager = LinearLayoutManager(context)
+        adapter = ReposRVAdapter(presenter.reposListPresenter, GlideImageLoader())
+        vb?.rvUsers?.adapter = adapter
+    }
 
     override fun updateList() {
         adapter?.notifyDataSetChanged()

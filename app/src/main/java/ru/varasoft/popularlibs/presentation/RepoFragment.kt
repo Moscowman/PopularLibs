@@ -23,11 +23,12 @@ class RepoFragment : MvpAppCompatFragment(), RepoView, BackButtonListener {
         private const val ARG_REPO = "GithubRepo"
 
         fun newInstance(repo: GithubRepo): Fragment {
-            val myFragment = RepoFragment()
+            val myFragment = RepoFragment().apply {
+                App.instance.appComponent.inject(this)
+            }
             val args = Bundle()
             args.putParcelable(ARG_REPO, repo)
             myFragment.setArguments(args)
-
             return myFragment
         }
     }

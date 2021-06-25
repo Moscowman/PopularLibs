@@ -31,8 +31,6 @@ class ReposPresenter(
 
     val reposListPresenter = ReposListPresenter()
 
-    lateinit var reposDisposable: Disposable
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
